@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:animateLayoutChanges="true"
+tools:context="karan.socialcopstask.MainActivity">
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:id="@+id/topPanel"
+    android:animateLayoutChanges="true"
+    android:layout_height="wrap_content">
+    <VideoView
+        android:layout_width="390dp"
+        android:layout_height="200dp"
+        android:id="@+id/videoView" />
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="Traffic Stats Demo" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#00ff00"
+            android:gravity="center"
+            android:text="Transmit Bytes" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00ff00"
+
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="0"
+            android:id="@+id/TX"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#ff0000"
+            android:gravity="center"
+            android:text="Receive Bytes" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#ff0000"
+
+            android:gravity="center"
+            android:text="0"
+            android:id="@+id/RX"/>
+    </LinearLayout>
+</RelativeLayout>
+
+<EditText
+    android:layout_marginLeft="@dimen/activity_vertical_margin"
+    android:id="@+id/enter_url"
+    android:hint="Enter A URL"
+    android:layout_marginRight="@dimen/activity_vertical_margin"
+    android:maxLines="1"
+
+    android:scrollHorizontally="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/topPanel"
+
+    />
+<TextView
+
+    android:id="@+id/hint"
+    android:layout_below="@+id/enter_url"
+    android:textSize="12sp"
+    android:textColor="#000"
+    android:text="*Leave Blank &amp; press play for default task url"
+    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+
+<ImageButton
+    android:layout_marginRight="@dimen/activity_vertical_margin"
+
+    android:background="@drawable/circle_background"
+    android:src="@drawable/play"
+    android:id="@+id/download"
+    android:text="PLAY"
+    android:layout_width="wrap_content"
+    android:layout_below="@+id/enter_url"
+    android:layout_alignParentRight="true"
+    android:layout_alignRight="@+id/enter_url"
+    android:layout_height="wrap_content" />
+
+
+
+<ProgressBar
+
+    android:id="@+id/progressBar2"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:indeterminate="false"
+    android:max="100"
+    android:progress="50"
+    android:progressDrawable="@drawable/circular"
+    android:secondaryProgress="100"
+    />
+
+<TextView
+    android:text="Saved Videos"
+    android:id="@+id/header"
+    android:layout_below="@+id/download"
+    android:layout_centerInParent="true"
+    android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+<android.support.v7.widget.RecyclerView
+    android:visibility="gone"
+    android:id="@+id/videos"
+    android:layout_width="match_parent"
+    android:layout_below="@+id/header"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true" />
+
+<View
+    android:layout_width="match_parent"
+    android:layout_below="@+id/header"
+    android:layout_height="1dp"
+    android:background="#FF0000" />
+
+<TextView
+    android:id="@+id/no_content"
+    android:paddingTop="20dp"
+    android:layout_centerInParent="true"
+    android:layout_below="@+id/header"
+    android:text="NO CONTENT \n AVAILABLE"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
+
