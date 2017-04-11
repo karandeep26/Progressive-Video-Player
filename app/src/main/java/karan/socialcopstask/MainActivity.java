@@ -1,15 +1,24 @@
 package karan.socialcopstask;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.TrafficStats;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,12 +40,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, VideoListener {
+   final int REQUEST_CODE=123;
     VideoView videoView;
     HttpProxyCacheServer httpProxyCacheServer;
     String url;
     MediaController mediaController;
     ImageButton button;
-    EditText enterUrl;
+     EditText enterUrl;
     RecycleViewAdapter recycleViewAdapter;
     RecyclerView recyclerView;
     ArrayList<Model> model;
@@ -61,12 +71,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        httpProxyCacheServer = new HttpProxyCacheServer.Builder(this).build();
         bindViews();
         initVariables();
         setViews();
-        setVideoViewListeners();
-        setRecyclerViewOnLoad();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+        }
+        else
+        {
+           hasPermission();
+        }
+
     }
 
 
@@ -187,9 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setRecyclerViewOnLoad() {
-        File path=new File(getExternalCacheDir().getAbsolutePath()+"/video-cache");
-        if (path.exists() && path.listFiles().length > 0) {
-
+           if (path.exists() && path.listFiles().length > 0) {
             File[] list = path.listFiles();
             for (File file : list) {
                 if (file.getAbsolutePath().endsWith(".mp4")) {
@@ -216,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         enterUrl = (EditText) findViewById(R.id.enter_url);
         recyclerView = (RecyclerView) findViewById(R.id.videos);
         loading = (ProgressBar) findViewById(R.id.loading);
+        loading.getIndeterminateDrawable().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
         noContent = findViewById(R.id.no_content);
         videoView = (VideoView) findViewById(R.id.videoView);
 
@@ -228,14 +243,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         res = getResources();
         drawable = res.getDrawable(R.drawable.circular);
         mediaController = new MediaController(this);
-//        root = new File(getExternalCacheDir().getAbsolutePath());
-//        if(!root.exists())
-//            root.mkdir();
-//        path=new File(root,"video-cache");
-//        if(!path.exists())
-//            path.mkdir();
-
-
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recycleViewAdapter = new RecycleViewAdapter(model, this);
@@ -251,14 +258,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar.setMax(100);
         progressBar.setProgressDrawable(drawable);
         progressBar.setVisibility(View.GONE);
-        enterUrl.setHorizontalScrollBarEnabled(true);
-        enterUrl.setHorizontallyScrolling(true);
-        enterUrl.setMovementMethod(new ScrollingMovementMethod());
+//        enterUrl.setHorizontalScrollBarEnabled(true);
+//        enterUrl.setHorizontallyScrolling(true);
+//        enterUrl.setMovementMethod(new ScrollingMovementMethod());
         videoView.setMediaController(mediaController);
         loading.setVisibility(View.GONE);
         recyclerView.addItemDecoration(divider);
         button.setOnClickListener(this);
 
+    }
+    void requestPermission()
+    {
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode!= Activity.RESULT_CANCELED&&grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+           hasPermission();
+        } else {
+            Toast.makeText(this, "Restart app to grant permissions", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+    private void hasPermission()
+    {
+        path=new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"Social Cops");
+        httpProxyCacheServer = new HttpProxyCacheServer.Builder(this).cacheDirectory(path).build();
+        setVideoViewListeners();
+        setRecyclerViewOnLoad();
     }
 
 
